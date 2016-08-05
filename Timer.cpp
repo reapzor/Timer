@@ -125,6 +125,18 @@ void Timer::update(unsigned long now)
 		}
 	}
 }
+
+void Timer::updatePeriod(int8_t id, unsigned long newPeriod)
+{
+	if (id >= 0 && id < MAX_NUMBER_OF_EVENTS)
+	{
+		if (_events[id].eventType != EVENT_NONE)
+		{
+			_events[id].period = newPeriod;
+		}
+	}
+}
+
 int8_t Timer::findFreeEventIndex(void)
 {
 	for (int8_t i = 0; i < MAX_NUMBER_OF_EVENTS; i++)

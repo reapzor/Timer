@@ -58,6 +58,11 @@ public:
   void update(void);
   void update(unsigned long now);
 
+  /**
+   * This method will set a new period for a timer with the given id
+   */
+  void updatePeriod(int8_t id, unsigned long period);
+
 protected:
   Event _events[MAX_NUMBER_OF_EVENTS];
   int8_t findFreeEventIndex(void);
