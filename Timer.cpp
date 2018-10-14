@@ -33,7 +33,11 @@ Timer::Timer(void)
 {
 }
 
-int8_t Timer::every(unsigned long period, void (*callback)(), int repeatCount)
+int8_t Timer::every(
+	unsigned long period,
+	void (*callback)(),
+	std::function<void(void)> stdCallback,
+	int repeatCount)
 {
 	int8_t i = findFreeEventIndex();
 	if (i == -1) return -1;
@@ -42,19 +46,40 @@ int8_t Timer::every(unsigned long period, void (*callback)(), int repeatCount)
 	_events[i].period = period;
 	_events[i].repeatCount = repeatCount;
 	_events[i].callback = callback;
+	_events[i].stdCallback = stdCallback;
 	_events[i].lastEventTime = millis();
 	_events[i].count = 0;
 	return i;
 }
 
+int8_t Timer::every(unsigned long period, void (*callback)(), int repeatCount)
+{
+	return every(period, callback, NULL, repeatCount);
+}
+
 int8_t Timer::every(unsigned long period, void (*callback)())
 {
-	return every(period, callback, -1); // - means forever
+	return every(period, callback, NULL, -1); // - means forever
 }
 
 int8_t Timer::after(unsigned long period, void (*callback)())
 {
-	return every(period, callback, 1);
+	return every(period, callback, NULL, 1);
+}
+
+int8_t Timer::every(unsigned long period, std::function<void(void)> stdCallback, int repeatCount)
+{
+	return every(period, NULL, stdCallback, repeatCount);
+}
+
+int8_t Timer::every(unsigned long period, std::function<void(void)> stdCallback)
+{
+	return every(period, NULL, stdCallback, -1);
+}
+
+int8_t Timer::after(unsigned long period, std::function<void(void)> stdCallback)
+{
+	return every(period, NULL, stdCallback, 1);
 }
 
 int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue, int repeatCount)

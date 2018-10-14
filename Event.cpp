@@ -47,7 +47,12 @@ void Event::update(unsigned long now)
 		switch (eventType)
 		{
 			case EVENT_EVERY:
-				(*callback)();
+				if (callback != NULL) {
+					(*callback)();
+				}
+				if (stdCallback != NULL) {
+					stdCallback();
+				}
 				break;
 
 			case EVENT_OSCILLATE:

@@ -42,6 +42,7 @@ public:
   uint8_t pin;
   uint8_t pinState;
   void (*callback)(void);
+  std::function<void(void)> stdCallback;
   unsigned long lastEventTime;
   int count;
 };
