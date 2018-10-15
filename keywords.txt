@@ -20,6 +20,7 @@ pulse	KEYWORD2
 pulseImmediate	KEYWORD2
 stop	KEYWORD2
 update	KEYWORD2
+updatePeriod  KEYWORD2
 findFreeEventIndex	KEYWORD2
 
 #######################################
