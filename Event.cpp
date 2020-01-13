@@ -42,7 +42,8 @@ void Event::update(void)
 
 void Event::update(unsigned long now)
 {
-	if (now - lastEventTime >= period)
+	// attention: lastEventTime might be higher than now
+	if (now >= period + lastEventTime)
 	{
 		switch (eventType)
 		{
