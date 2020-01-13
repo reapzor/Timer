@@ -134,6 +134,12 @@ void Timer::stop(int8_t id)
 	}
 }
 
+void Timer::stop()
+{
+	m_bPaused = true;
+	m_bStopped = true;
+}
+
 void Timer::pause()
 {
 	m_bPaused = true;
@@ -141,7 +147,11 @@ void Timer::pause()
 
 void Timer::unpause()
 {
-	m_bPaused = true;
+	if (m_bStopped) {
+		Serial.println("Cannot unpause Timer in stopped state!");
+		return;
+	}
+	m_bPaused = false;
 }
 
 void Timer::update(void)

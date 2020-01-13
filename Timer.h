@@ -77,6 +77,7 @@ public:
    */
   int8_t pulseImmediate(uint8_t pin, unsigned long period, uint8_t pulseValue);
   void stop(int8_t id);
+  void stop();
   void pause();
   void unpause();
   void update(void);
@@ -94,6 +95,7 @@ protected:
 private:
   int8_t every(unsigned long period, void (*callback)(), std::function<void(void)> stdCallback, int repeatCount);
   bool m_bPaused = false;
+  bool m_bStopped = false;
 
 };
 
