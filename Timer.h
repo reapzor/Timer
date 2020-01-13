@@ -24,6 +24,7 @@
 #define Timer_h
 
 #include <inttypes.h>
+#include <functional>
 #include "Event.h"
 
 #define MAX_NUMBER_OF_EVENTS (10)
@@ -76,6 +77,8 @@ public:
    */
   int8_t pulseImmediate(uint8_t pin, unsigned long period, uint8_t pulseValue);
   void stop(int8_t id);
+  void pause();
+  void unpause();
   void update(void);
   void update(unsigned long now);
 
@@ -90,6 +93,7 @@ protected:
 
 private:
   int8_t every(unsigned long period, void (*callback)(), std::function<void(void)> stdCallback, int repeatCount);
+  bool m_bPaused = false;
 
 };
 

@@ -134,11 +134,24 @@ void Timer::stop(int8_t id)
 	}
 }
 
+void Timer::pause()
+{
+	m_bPaused = true;
+}
+
+void Timer::unpause()
+{
+	m_bPaused = true;
+}
+
 void Timer::update(void)
 {
+	if (m_bPaused) {
+		return;
+	}
 	for (int8_t i = 0; i < MAX_NUMBER_OF_EVENTS; i++)
 	{
-		if (_events[i].eventType != EVENT_NONE)
+		if (!m_bPaused && _events[i].eventType != EVENT_NONE)
 		{
 			unsigned long now = millis();
 			_events[i].update(now);
@@ -148,9 +161,12 @@ void Timer::update(void)
 
 void Timer::update(unsigned long now)
 {
+	if (m_bPaused) {
+		return;
+	}
 	for (int8_t i = 0; i < MAX_NUMBER_OF_EVENTS; i++)
 	{
-		if (_events[i].eventType != EVENT_NONE)
+		if (!m_bPaused && _events[i].eventType != EVENT_NONE)
 		{
 			_events[i].update(now);
 		}

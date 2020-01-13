@@ -24,6 +24,7 @@
 #define Event_h
 
 #include <inttypes.h>
+#include <functional>
 
 #define EVENT_NONE 0
 #define EVENT_EVERY 1
