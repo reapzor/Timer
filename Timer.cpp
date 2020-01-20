@@ -47,8 +47,16 @@ int8_t Timer::every(
 	_events[i].repeatCount = repeatCount;
 	_events[i].callback = callback;
 	_events[i].stdCallback = stdCallback;
-	_events[i].lastEventTime = millis();
+	// Timers all start upon the first loop of Timer.update();
+	// Otherwise they start 'now'
+	if (m_bStarted) {
+		_events[i].lastEventTime = millis();
+	}
+	else {
+		_events[i].lastEventTime = 0;
+	}
 	_events[i].count = 0;
+	_events[i].paused = false;
 	return i;
 }
 
@@ -93,8 +101,16 @@ int8_t Timer::oscillate(uint8_t pin, unsigned long period, uint8_t startingValue
 	_events[i].pinState = startingValue;
 	digitalWrite(pin, startingValue);
 	_events[i].repeatCount = repeatCount * 2; // full cycles not transitions
-	_events[i].lastEventTime = millis();
+	// Timers all start upon the first loop of Timer.update();
+	// Otherwise they start 'now'
+	if (m_bStarted) {
+		_events[i].lastEventTime = millis();
+	}
+	else {
+		_events[i].lastEventTime = 0;
+	}
 	_events[i].count = 0;
+	_events[i].paused = false;
 	return i;
 }
 
@@ -126,6 +142,10 @@ int8_t Timer::pulseImmediate(uint8_t pin, unsigned long period, uint8_t pulseVal
 	return id;
 }
 
+void Timer::startImmediate()
+{
+	m_bStarted = true;
+}
 
 void Timer::stop(int8_t id)
 {
@@ -145,6 +165,11 @@ void Timer::pause()
 	m_bPaused = true;
 }
 
+void Timer::pause(int8_t id)
+{
+	_events[id].paused = true;
+}
+
 void Timer::unpause()
 {
 	if (m_bStopped) {
@@ -154,14 +179,22 @@ void Timer::unpause()
 	m_bPaused = false;
 }
 
+void Timer::unpause(int8_t id)
+{
+	_events[id].paused = false;
+}
+
 void Timer::update(void)
 {
 	if (m_bPaused) {
 		return;
 	}
+	if (!m_bStarted) {
+		m_bStarted = true;
+	}
 	for (int8_t i = 0; i < MAX_NUMBER_OF_EVENTS; i++)
 	{
-		if (!m_bPaused && _events[i].eventType != EVENT_NONE)
+		if (!m_bPaused && _events[i].eventType != EVENT_NONE && !_events[i].paused)
 		{
 			unsigned long now = millis();
 			_events[i].update(now);
@@ -174,9 +207,12 @@ void Timer::update(unsigned long now)
 	if (m_bPaused) {
 		return;
 	}
+	if (!m_bStarted) {
+		m_bStarted = true;
+	}
 	for (int8_t i = 0; i < MAX_NUMBER_OF_EVENTS; i++)
 	{
-		if (!m_bPaused && _events[i].eventType != EVENT_NONE)
+		if (!m_bPaused && _events[i].eventType != EVENT_NONE && !_events[i].paused)
 		{
 			_events[i].update(now);
 		}

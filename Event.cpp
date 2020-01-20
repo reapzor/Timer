@@ -42,6 +42,10 @@ void Event::update(void)
 
 void Event::update(unsigned long now)
 {
+	if (lastEventTime == 0) {
+		lastEventTime = now;
+	}
+	
 	// attention: lastEventTime might be higher than now
 	if (now >= period + lastEventTime)
 	{

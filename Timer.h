@@ -27,7 +27,7 @@
 #include <functional>
 #include "Event.h"
 
-#define MAX_NUMBER_OF_EVENTS (10)
+#define MAX_NUMBER_OF_EVENTS (25)
 
 #define TIMER_NOT_AN_EVENT (-2)
 #define NO_TIMER_AVAILABLE (-1)
@@ -76,10 +76,13 @@ public:
    * length period. The pin will be left in the !pulseValue state
    */
   int8_t pulseImmediate(uint8_t pin, unsigned long period, uint8_t pulseValue);
+  void startImmediate();
   void stop(int8_t id);
   void stop();
   void pause();
+  void pause(int8_t id);
   void unpause();
+  void unpause(int8_t id);
   void update(void);
   void update(unsigned long now);
 
@@ -96,7 +99,7 @@ private:
   int8_t every(unsigned long period, void (*callback)(), std::function<void(void)> stdCallback, int repeatCount);
   bool m_bPaused = false;
   bool m_bStopped = false;
-
+  bool m_bStarted = false;
 };
 
 #endif
